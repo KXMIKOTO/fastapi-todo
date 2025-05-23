@@ -36,4 +36,4 @@ class TaskOut(TaskBase):
     id: int
 
     class Config:
-        orm_mode = True  # важно для работы с ORM объектами
+        from_attributes = True  # важно для работы с ORM объектами
