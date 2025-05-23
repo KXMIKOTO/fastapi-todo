@@ -1,23 +1,26 @@
-from enum import Enum
-from pydantic import BaseModel
-from typing import Optional
-from datetime import datetime
+from sqlalchemy import Column, Integer, String, DateTime, Enum
+from sqlalchemy.ext.declarative import declarative_base
+import enum
 
-class StatusEnum(str, Enum):
+Base = declarative_base()
+
+class StatusEnum(str, enum.Enum):
     new = "new"
     in_progress = "in_progress"
     done = "done"
 
-class PriorityEnum(str, Enum):
+class PriorityEnum(str, enum.Enum):
     low = "low"
     medium = "medium"
     high = "high"
 
-class Task(BaseModel):
-    id: int
-    title: str
-    description: Optional[str] = None
-    status: StatusEnum = StatusEnum.new
-    priority: PriorityEnum = PriorityEnum.medium
-    deadline: Optional[datetime] = None
-    category: Optional[str] = None
+class Task(Base):
+    __tablename__ = "tasks"
+
+    id = Column(Integer, primary_key=True, index=True)
+    title = Column(String, index=True)
+    description = Column(String, nullable=True)
+    status = Column(Enum(StatusEnum), default=StatusEnum.new)
+    priority = Column(Enum(PriorityEnum), default=PriorityEnum.medium)
+    deadline = Column(DateTime, nullable=True)
+    category = Column(String, nullable=True)

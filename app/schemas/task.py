@@ -1,15 +1,28 @@
 from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime
-from app.models.models.task import StatusEnum, PriorityEnum
+from enum import Enum
 
-class TaskCreate(BaseModel):
+class StatusEnum(str, Enum):
+    new = "new"
+    in_progress = "in_progress"
+    done = "done"
+
+class PriorityEnum(str, Enum):
+    low = "low"
+    medium = "medium"
+    high = "high"
+
+class TaskBase(BaseModel):
     title: str
     description: Optional[str] = None
-    status: StatusEnum = StatusEnum.new
-    priority: PriorityEnum = PriorityEnum.medium
+    status: Optional[StatusEnum] = StatusEnum.new
+    priority: Optional[PriorityEnum] = PriorityEnum.medium
     deadline: Optional[datetime] = None
     category: Optional[str] = None
+
+class TaskCreate(TaskBase):
+    pass
 
 class TaskUpdate(BaseModel):
     title: Optional[str]
@@ -19,5 +32,8 @@ class TaskUpdate(BaseModel):
     deadline: Optional[datetime]
     category: Optional[str]
 
-class TaskOut(BaseModel):
+class TaskOut(TaskBase):
     id: int
+
+    class Config:
+        orm_mode = True  # важно для работы с ORM объектами
