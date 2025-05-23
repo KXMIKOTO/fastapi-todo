@@ -1,24 +1,24 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: 'http://localhost:8000',  // сюда адрес твоего бэка
+  baseURL: 'http://127.0.0.1:8000/api/v1/tasks/api/v1/tasks',  // сюда адрес твоего бэка
 });
 
 export async function getTasks() {
-    const response = await axios.get(api);
+    const response = await api.get('/');
     return response.data;
 }
 
 export async function createTask(task) {
-    const response = await axios.post(api, task);
+    const response = await api.post('/', task);
     return response.data;
 }
 
 export async function updateTask(id, updates) {
-    const response = await axios.put(`${api}/${id}`, updates);
+    const response = await api.put(`/${id}`, updates);
     return response.data;
 }
 
 export async function deleteTask(id) {
-    await axios.delete(`${api}/${id}`);
+    await api.delete(`/${id}`);
 }
